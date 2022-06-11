@@ -1,3 +1,5 @@
 from flask import Blueprint
 
-admin = Blueprint('admin', __name__)
+adminBP = Blueprint('adminBP', __name__)
+
+from . import views
