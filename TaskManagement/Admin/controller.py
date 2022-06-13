@@ -32,7 +32,7 @@ def add(admin):
 def get(username, pageNum, pageSize):
     Session = sessionmaker(bind=engine)
     session = Session()
-    if(username == ''):
+    if(username != ''):
         admin = session.query(model.Admin).filter(model.Admin.username.like(
             '%' + username + '%'), model.Admin.status == 1).offset(pageNum * pageSize).limit(pageSize).all()  # 获取分页数据
     else:
@@ -53,6 +53,7 @@ def change(admin):
         model.Admin.username: admin.username, model.Admin.password: admin.password, model.Admin.status: admin.status})
     session.commit()
     session.close()
+
 
 def delete(id):
     Session = sessionmaker(bind=engine)

@@ -52,7 +52,7 @@ def add():
 def get():
     code = 400
     msg = ''
-    data = {}
+    data = []
 
     username = request.json.get('username')
     pageNum = request.json.get('pageNum')
@@ -62,14 +62,15 @@ def get():
     if(adminList):
         msg = 'Get Success'
         for i in adminList:
-            data[i.id] = {'username': i.username,
-                          'password': i.password, 'status': i.status}
+            data.append({'id': i.id, 'username': i.username,
+                        'password': i.password})
 
         code = 200
     else:
         msg = 'Get Failed'
 
     return jsonify({'code': code, 'msg': msg, 'data': data})
+
 
 @adminBP.route('/change', methods=['POST'])
 def change():
@@ -91,6 +92,7 @@ def change():
 
     return jsonify({'code': code, 'msg': msg, 'data': data})
 
+
 @adminBP.route('/delete', methods=['POST'])
 def delete():
     code = 400
@@ -98,7 +100,7 @@ def delete():
     data = {}
 
     id = request.json.get('id')
-    
+
     if(id):
         controller.delete(id)
         msg = 'Delete Success'
