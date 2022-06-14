@@ -38,23 +38,23 @@ class Admin(Base):
         self.status = status
 
 
-class Tasks(Base):
-    __tablename__ = 'tasks'
+class Task(Base):
+    __tablename__ = 'task'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    taskName = Column(String(50), nullable=False)
+    name = Column(String(50), nullable=False)
     date = Column(DateTime, nullable=False)
     status = Column(Integer, nullable=False)
 
-    def __init__(self, taskName, date, status):
-        self.taskName = taskName
+    def __init__(self, name, date, status):
+        self.name = name
         self.date = date
         self.status = status
 
 
-class TaskDetails(Base):
-    __tablename__ = 'task_details'
+class TaskDetail(Base):
+    __tablename__ = 'task_detail'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    taskId = Column(Integer, ForeignKey('tasks.id'), nullable=False)
+    taskId = Column(Integer, ForeignKey('task.id'), nullable=False)
     studentId = Column(Integer, ForeignKey('student.id'), nullable=False)
     score = Column(Integer, nullable=False)
     status = Column(Integer, nullable=False)
