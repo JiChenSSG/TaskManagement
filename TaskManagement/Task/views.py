@@ -1,8 +1,8 @@
-import re
 from TaskManagement.model import Task
 from . import taskBP
 from flask import jsonify, request
 import TaskManagement.Task.controller as controller
+import TaskManagement.Student.controller as studentController
 
 
 @taskBP.route('/add', methods=['POST'])
@@ -65,13 +65,34 @@ def get():
 
     tasks = controller.get(name, pageNum, pageSize, order, desc)
 
-
-
     if(tasks):
         for i in tasks:
             data.append({'id': i.id, 'date': i.date, 'name': i.name})
         code = 200
         msg = 'Get Success'
+    else:
+        msg = 'Get Failed'
+
+    return jsonify({'code': code, 'msg': msg, 'data': data})
+
+
+@taskBP.route('/getScore', methods=['POST'])
+def getScore():
+    code = 400
+    msg = ''
+    data = []
+
+    id = request.json.get('id')
+
+    score = controller.getScore(id)
+
+    if(score):
+        code = 200
+        msg = 'Get Success'
+        for i in score:
+            student = studentController.getById(i.studentId)
+            data.append(
+                {'id': i.id, 'studentName': student.name, 'score': i.score})
     else:
         msg = 'Get Failed'
 

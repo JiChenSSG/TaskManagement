@@ -1,7 +1,7 @@
 import string
 
 from flask import session
-from ..model import engine, Student
+from ..model import Task, engine, Student, TaskDetail
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import text
 
@@ -66,3 +66,36 @@ def delete(id):
     session.close()
 
     return 1
+
+
+def getScore(id):
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    taskDetail = session.query(TaskDetail).filter(
+        TaskDetail.studentId == id).all()
+
+    session.close()
+
+    return taskDetail
+
+
+def getById(id):
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    stu = session.query(Student).filter(Student.id == id).first()
+
+    session.close()
+
+    return stu
+
+
+def addScore(taskDetail):
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    session.add(taskDetail)
+    session.commit()
+    id = taskDetail.id
+    session.close()
+    return id

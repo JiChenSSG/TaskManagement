@@ -1,7 +1,8 @@
-from TaskManagement.model import Student
+from TaskManagement.model import Student, TaskDetail
 from . import studentBP
 from flask import jsonify, request
 import TaskManagement.Student.controller as controller
+import TaskManagement.Task.controller as taskController
 
 
 @studentBP.route('/add', methods=['POST'])
@@ -100,5 +101,52 @@ def delete():
     if(controller.delete(id) == 1):
         msg = 'Delete Success'
         code = 200
+
+    return jsonify({'code': code, 'msg': msg, 'data': data})
+
+
+@studentBP.route('/getScore', methods=['POST'])
+def getScore():
+    code = 400
+    msg = ''
+    data = []
+
+    id = request.json.get('id')
+
+    stu = controller.getScore(id)
+
+    if(stu):
+        code = 200
+        msg = 'Get Success'
+        for i in stu:
+            task = taskController.getById(i.taskId)
+            data.append({
+                'id': i.id,
+                'taskName': task.name,
+                'score': i.score
+            })
+    else:
+        msg = 'Get Failed'
+
+    return jsonify({'code': code, 'msg': msg, 'data': data})
+
+
+@studentBP.route('/addScore', methods=['POST'])
+def addScore():
+    code = 400
+    msg = ''
+    data = {}
+
+    studentId = request.json.get('id')
+    taskId = request.json.get('taskId')
+    score = request.json.get('score')
+
+    taskDetail = TaskDetail(taskId, studentId, score, 1)
+
+    if(controller.addScore(taskDetail) != 0):
+        msg = 'Add Success'
+        code = 200
+    else:
+        msg = 'Add Failed'
 
     return jsonify({'code': code, 'msg': msg, 'data': data})
