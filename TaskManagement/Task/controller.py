@@ -37,14 +37,17 @@ def get(name, pageNum, pageSize, order, desc):
     session.close()
     return tasks
 
+
 def getScore(id):
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    taskDetail = session.query(TaskDetail).filter(TaskDetail.taskId == id).all()
+    taskDetail = session.query(TaskDetail).filter(
+        TaskDetail.taskId == id).all()
 
     session.close()
     return taskDetail
+
 
 def getById(id):
     Session = sessionmaker(bind=engine)
@@ -52,3 +55,11 @@ def getById(id):
     task = session.query(Task).filter(Task.id == id).first()
     session.close()
     return task
+
+
+def getAllNameAndId():
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    tasks = session.query(Task).filter(Task.status == 1).all()
+    session.close()
+    return tasks

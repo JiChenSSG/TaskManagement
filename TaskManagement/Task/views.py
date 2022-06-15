@@ -3,6 +3,8 @@ from . import taskBP
 from flask import jsonify, request
 import TaskManagement.Task.controller as controller
 import TaskManagement.Student.controller as studentController
+import time
+import datetime
 
 
 @taskBP.route('/add', methods=['POST'])
@@ -67,7 +69,9 @@ def get():
 
     if(tasks):
         for i in tasks:
-            data.append({'id': i.id, 'date': i.date, 'name': i.name})
+            date = i.date.strftime('%Y-%m-%d')
+
+            data.append({'id': i.id, 'date': date, 'name': i.name})
         code = 200
         msg = 'Get Success'
     else:
@@ -93,6 +97,24 @@ def getScore():
             student = studentController.getById(i.studentId)
             data.append(
                 {'id': i.id, 'studentName': student.name, 'score': i.score})
+    else:
+        msg = 'Get Failed'
+
+    return jsonify({'code': code, 'msg': msg, 'data': data})
+
+@taskBP.route('/getAllNameAndId', methods=['POST'])
+def getAllNameAndId():
+    code = 400
+    msg = ''
+    data = []
+
+    tasks = controller.getAllNameAndId()
+
+    if(tasks):
+        code = 200
+        msg = 'Get Success'
+        for i in tasks:
+            data.append({'id': i.id, 'name': i.name})
     else:
         msg = 'Get Failed'
 

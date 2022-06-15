@@ -123,7 +123,8 @@ def getScore():
             data.append({
                 'id': i.id,
                 'taskName': task.name,
-                'score': i.score
+                'score': i.score,
+                'taskId': i.taskId
             })
     else:
         msg = 'Get Failed'
@@ -137,7 +138,7 @@ def addScore():
     msg = ''
     data = {}
 
-    studentId = request.json.get('id')
+    studentId = request.json.get('studentId')
     taskId = request.json.get('taskId')
     score = request.json.get('score')
 
@@ -148,5 +149,29 @@ def addScore():
         code = 200
     else:
         msg = 'Add Failed'
+
+    return jsonify({'code': code, 'msg': msg, 'data': data})
+
+
+@studentBP.route('/changeScore', methods=['POST'])
+def changeScore():
+    code = 400
+    msg = ''
+    data = {}
+
+    id = request.json.get('id')
+    studentId = request.json.get('studentId')
+    taskId = request.json.get('taskId')
+    score = request.json.get('score')
+    status = 1
+
+    taskDetail = TaskDetail(taskId, studentId, score, status)
+    taskDetail.id = id
+
+    if(controller.changeScore(taskDetail) != 0):
+        msg = 'Change Success'
+        code = 200
+    else:
+        msg = 'Change Failed'
 
     return jsonify({'code': code, 'msg': msg, 'data': data})

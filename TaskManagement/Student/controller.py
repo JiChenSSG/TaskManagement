@@ -99,3 +99,17 @@ def addScore(taskDetail):
     id = taskDetail.id
     session.close()
     return id
+
+
+def changeScore(taskDetail):
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    session.query(TaskDetail).filter(TaskDetail.id == taskDetail.id).update({
+        TaskDetail.score: taskDetail.score,
+    })
+
+    session.commit()
+    session.close()
+
+    return 1
